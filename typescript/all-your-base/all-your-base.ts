@@ -45,30 +45,23 @@ class Converter {
 	 */
 	private toCustomBase(sequence: number[], base: number): number[] {
 		let newSequence:number[] = [];
+		let power = 0;
+		let sum = 0;
 		sequence.reverse().forEach(digit => {
-			while (digit > 0) {
-				newSequence.push(Math.floor(digit % base));
-				digit = Math.floor(digit / base);
-			}
+			sum += digit * Math.pow(10, power);
+			power++;
 		});
-		return newSequence.reverse();
-	}
 
-	private toAnyBase(sequence: number[], base: number): number[] {
-		let newSequence:number[] = [];
-		sequence.forEach(digit => {
-			let miniSequence:number[] = [];
-			while (digit > base) {
-				miniSequence.unshift(digit % base);
-				digit = Math.floor(digit / base);
-			}
-			if (digit > 0) {
-				miniSequence.unshift(digit);
-			}
-			newSequence.unshift(...miniSequence);
-		});
+		while (sum >= base) {
+			newSequence.unshift(sum % base);
+			sum = Math.floor(sum / base);
+		}
+		if (sum > 0) {
+			newSequence.unshift(sum);
+		}
 		return newSequence;
 	}
+
 }
 
 export default Converter;
