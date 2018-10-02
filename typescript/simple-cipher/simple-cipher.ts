@@ -1,52 +1,59 @@
 class SimpleCipher {
 
-	key:string;
+	readonly key:string;
 
-    lowerCaseASCIIStartIndex = 97;
-    lowerCaseASCIIEndIndex = 122;
-    rangeOfValidCharacters = 26;
+    private static lowerCaseASCIIStartIndex = 97;
+    private static lowerCaseASCIIEndIndex = 122;
+    private static rangeOfValidCharacters = 26;
 
-	constructor(key:string = undefined) {
+	constructor(key?:string) {
 		if (key === undefined) {
-			let keyArr = [];
-			while (keyArr.length < 100) {
-				let r = Math.floor(Math.random() * this.rangeOfValidCharacters) + this.lowerCaseASCIIStartIndex;
-				keyArr.push(String.fromCharCode(r));
-			}
-			key = keyArr.join('');
+			key = this._generateKey();
 		}
-        if (key.length === 0 ||
-            key.split('').some(element => {
-                return !/^[a-z]+$/.test(element);
-            })) {
+        if (!this._isValidKey(key)) {
             throw new Error('Bad key');
         }
 		this.key = key;
 	}
 
-    _encodeAndDecodeHelper(input: string, method:string):string {
-        let newInput = input.split('');
-        newInput.forEach((char, index, arr) => {
+    private _generateKey():string {
+        let keyArr = [];
+        while (keyArr.length < 100) {
+            let r = Math.floor(Math.random() * SimpleCipher.rangeOfValidCharacters) + SimpleCipher.lowerCaseASCIIStartIndex;
+            keyArr.push(String.fromCharCode(r));
+        }
+        return keyArr.join('');
+    }
+
+    private _isValidKey(key:string):boolean {
+        if (key.length === 0 ||
+            !/^[a-z]+$/.test(key)) {
+            return false;
+        }
+        return true;
+    }
+
+    private _encodeAndDecodeHelper(input: string, encode:boolean):string {
+        return input.split('').map((char, index) => {
             let charInt = char.charCodeAt(0);
-            if (method.toLowerCase() === 'encode') {
-                charInt += this.key[index % this.key.length].charCodeAt(0) - this.lowerCaseASCIIStartIndex;
+            if (encode) {
+                charInt += this.key[index % this.key.length].charCodeAt(0) - SimpleCipher.lowerCaseASCIIStartIndex;
             } else {
-                charInt -= this.key[index % this.key.length].charCodeAt(0) - this.lowerCaseASCIIStartIndex;
+                charInt -= this.key[index % this.key.length].charCodeAt(0) - SimpleCipher.lowerCaseASCIIStartIndex;
             }
-            if (charInt > this.lowerCaseASCIIEndIndex) { charInt -= (this.lowerCaseASCIIEndIndex+1) }
-            else if (charInt < this.lowerCaseASCIIStartIndex) { charInt += (this.lowerCaseASCIIEndIndex+1) }
-            charInt = this.lowerCaseASCIIStartIndex + (charInt % this.lowerCaseASCIIStartIndex)
-            arr[index] = String.fromCharCode(charInt);
-        });
-        return newInput.join('');
+            if (charInt > SimpleCipher.lowerCaseASCIIEndIndex) { charInt -= (SimpleCipher.lowerCaseASCIIEndIndex+1) }
+            else if (charInt < SimpleCipher.lowerCaseASCIIStartIndex) { charInt += (SimpleCipher.lowerCaseASCIIEndIndex+1) }
+            charInt = SimpleCipher.lowerCaseASCIIStartIndex + (charInt % SimpleCipher.lowerCaseASCIIStartIndex)
+            return String.fromCharCode(charInt);
+        }).join('');
     }
 
     encode(input: string):string {
-        return this._encodeAndDecodeHelper(input, 'encode');
+        return this._encodeAndDecodeHelper(input, true);
     }
 
     decode(input: string):string {
-        return this._encodeAndDecodeHelper(input, 'decode');
+        return this._encodeAndDecodeHelper(input, false);
     }
 }
 
