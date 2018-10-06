@@ -1,14 +1,26 @@
 class Bob {
-    hey(phrase:string) {
-        if (/^\s*$/.test(phrase)) {
-        	return 'Fine. Be that way!';
-        } else if (phrase === phrase.toUpperCase() &&
-        	/[A-Za-z]+/.test(phrase)) {
-        	return 'Whoa, chill out!';
-        } else if (phrase.endsWith('?')) {
-        	return 'Sure.';
+    private isAskingQuestion(phrase: string): boolean {
+        return phrase.endsWith('?')
+    }
+
+    private isYelling(phrase: string): boolean {
+        return phrase === phrase.toUpperCase() &&
+            /[A-Za-z]+/.test(phrase)
+    }
+
+    private isSayingNothing(phrase: string): boolean {
+        return /^\s*$/.test(phrase)
+    }
+
+    hey(phrase: string) {
+        if (this.isSayingNothing(phrase)) {
+            return 'Fine. Be that way!'
+        } else if (this.isYelling(phrase)) {
+            return 'Whoa, chill out!'
+        } else if (this.isAskingQuestion(phrase)) {
+            return 'Sure.'
         } else {
-        	return 'Whatever.';
+            return 'Whatever.'
         }
     }
 }
