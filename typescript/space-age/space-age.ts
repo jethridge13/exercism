@@ -15,35 +15,39 @@ export default class SpaceAge {
         this.seconds = seconds
     }
 
+    private _onEarthNoRounding(): number {
+        return this.seconds / this.earthYearSeconds
+    }
+
     onMercury(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.mercuryEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.mercuryEarthYears).toFixed(2))
     }
 
     onVenus(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.venusEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.venusEarthYears).toFixed(2))
     }
 
     onEarth(): number {
-        return Number((this.seconds / this.earthYearSeconds).toFixed(2))
+        return Number(this._onEarthNoRounding().toFixed(2))
     }
 
     onMars(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.marsEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.marsEarthYears).toFixed(2))
     }
 
     onJupiter(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.jupiterEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.jupiterEarthYears).toFixed(2))
     }
 
     onSaturn(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.saturnEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.saturnEarthYears).toFixed(2))
     }
 
     onUranus(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.uranusEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.uranusEarthYears).toFixed(2))
     }
 
     onNeptune(): number {
-        return Number(((this.seconds / this.earthYearSeconds) / this.neptuneEarthYears).toFixed(2))
+        return Number(((this._onEarthNoRounding()) / this.neptuneEarthYears).toFixed(2))
     }
 }
