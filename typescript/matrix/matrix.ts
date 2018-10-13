@@ -1,25 +1,33 @@
 class Matrix {
 
-    private readonly matrix: number[][]
+    // private readonly matrix: number[][]
+    readonly rows: number[][]
+    readonly columns: number[][]
 
     constructor(matrixString: string) {
-        const columns = matrixString.split('\n')
-        const rows = []
-        for (const column of columns) {
-            rows.push(column.split(' ').map((x) => parseInt(x, 10)))
+        const rows = matrixString.split('\n')
+        this.rows = rows.map((row: string): number[] => {
+            return this._parseStringToNumberArray(row)
+        })
+        
+        const columns: number[][] = []
+        for (const [columnIndex, row] of this.rows.entries()) {
+            if (columns.length < columnIndex) {
+                columns.push(new Array())
+            }
+            for (const [index, value] of row.entries()) {
+                if (columns[columnIndex].length < index) {
+                    columns[columnIndex].push(0)
+                }
+                columns[columnIndex][index] = value
+            }
         }
-        this.matrix = rows
     }
 
-    rows(row: number): number[] {
-        return this.matrix[row]
+    private _parseStringToNumberArray(s: string): number[] {
+        return s.split(' ').map((x: string): number => parseInt(x, 10))
     }
 
-    columns(column: number): number[] {
-        const columns: number[] = []
-        this.matrix.forEach((x) => columns.push(x[column]))
-        return columns
-    }
 }
 
 export default Matrix
