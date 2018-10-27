@@ -11,7 +11,7 @@ export default class LinkedList<T> {
 	
 	push(item: T): void {
 		const node = new Node(item)
-		if (this.tail === null) {
+		if (!this.tail) {
 			this.head = node
 			this.tail = node
 		} else {
@@ -22,36 +22,26 @@ export default class LinkedList<T> {
 	}
 
 	pop(): T | null {
-		if (this.tail !== null) {
-			const tail = this.tail
-			const prev = this.tail.getPrev()
-			if (prev !== null) {
-				prev.setNext(null)
-				this.tail = prev
-			}
-			this.itemCount -= 1
-			return tail.value
+		if (this.tail) {
+			const value = this.tail.value
+			this._deleteNode(this.tail)
+			return value
 		}
 		return null
 	}
 
 	shift(): T | null {
-		if (this.head !== null) {
-			const head = this.head
-			const next = this.head.getNext()
-			if (next !== null) {
-				next.setPrev(null)
-				this.head = next
-			}
-			this.itemCount -= 1
-			return head.value
+		if (this.head) {
+			const value = this.head.value
+			this._deleteNode(this.head)
+			return value
 		}
 		return null
 	}
 
-	unshift(item: T) {
+	unshift(item: T): void {
 		const node = new Node(item)
-		if (this.head === null) {
+		if (!this.head) {
 			this.head = node
 			this.tail = node
 		} else {
@@ -65,7 +55,7 @@ export default class LinkedList<T> {
 		return this.itemCount
 	}
 
-	delete(item: T) {
+	delete(item: T): void {
 		// TODO
 		let node = this.head
 		while (node !== null) {
@@ -73,7 +63,38 @@ export default class LinkedList<T> {
 				this.itemCount -= 1
 				node = null
 			}
+			if (node !== null) {
+				node = node.getNext()
+			}
 		}
+	}
+
+	private _deleteNode(node: Node<T>): void {
+		if (node === this.head) {
+			const newHead = this.head.getNext()
+			if (newHead) {
+				newHead.setPrev(null)
+				this.head = newHead
+			}
+		}
+		if (node === this.tail) {
+			const newTail = this.tail.getPrev()
+			if (newTail) {
+				newTail.setNext(null)
+				this.tail = newTail
+			}
+		}
+		const next = node.getNext()
+		const prev = node.getPrev()
+		if (next && prev) {
+			next.setPrev(prev)
+			prev.setNext(next)
+		} else if (next) {
+			next.setPrev(null)
+		} else if (prev) {
+			prev.setNext(null)
+		}
+		this.itemCount -= 1
 	}
 }
 
