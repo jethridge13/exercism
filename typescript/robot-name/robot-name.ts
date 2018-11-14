@@ -1,3 +1,5 @@
+const alreadyGeneratedNames = new Map<string, number>()
+
 export default class RobotName {
     name: string
 
@@ -6,7 +8,16 @@ export default class RobotName {
     }
 
     resetName(): void {
-        this.name = this._generateName()
+        let name:string = ''
+        let genName = true
+        while (genName) {
+            name = this._generateName()
+            if (!alreadyGeneratedNames.has(name)) {
+                genName = false
+                alreadyGeneratedNames.set(name, 1)
+            }
+        }
+        this.name = name
     }
 
     private _generateName(): string {
